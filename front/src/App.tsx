@@ -1,7 +1,9 @@
+import LoginCon from "./login/LoginCon";
+
 function App() {
   return (
     <>
-      <p>Yolo</p>
+      <LoginCon />
     </>
   );
 }
