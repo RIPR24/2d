@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../context/TwoDcontext";
 type info = {
   email: string;
   pass: string;
@@ -8,6 +9,7 @@ type info = {
 const LoginCon = () => {
   const [disable, setDisable] = useState(false);
   const [prob, setProb] = useState("");
+  const socket = useSocket();
   const [info, setInfo] = useState<info>({
     email: "",
     pass: "",
@@ -21,6 +23,7 @@ const LoginCon = () => {
 
   const login = async () => {
     setDisable(true);
+    socket?.emit("login", { email: "abc" });
   };
 
   const googleLogin = async () => {};

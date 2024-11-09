@@ -2,8 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 type info = {
-  fname: string;
-  lname: string;
+  name: string;
   email: string;
   pass: string;
   cpass: string;
@@ -14,15 +13,14 @@ const SignupCon = () => {
   const [disable, setDisable] = useState(false);
   const [prob, setProb] = useState("");
   const [info, setInfo] = useState<info>({
-    fname: "",
-    lname: "",
+    name: "",
     email: "",
     pass: "",
     cpass: "",
   });
 
   const signup = async () => {
-    const name = info.fname + " " + info.lname;
+    const name = info.name;
     const reg =
       /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
     if (name.length > 1) {
@@ -54,19 +52,11 @@ const SignupCon = () => {
       <div className="logcon">
         <input
           type="text"
-          placeholder="First name"
-          value={info.fname}
-          name="fname"
+          placeholder="Name"
+          value={info.name}
+          name="name"
           onChange={handleChange}
-          id="fname"
-        />
-        <input
-          type="text"
-          placeholder="Last name"
-          name="lname"
-          value={info.lname}
-          onChange={handleChange}
-          id="lname"
+          id="name"
         />
         <input
           type="email"

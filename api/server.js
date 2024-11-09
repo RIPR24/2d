@@ -1,7 +1,17 @@
 const { Server } = require("socket.io");
+const jwt = require("jsonwebtoken");
+const onConnection = require("./socket");
+const { default: mongoose } = require("mongoose");
+require("dotenv").config();
 
-const io = new Server(8000, {
+mongoose.connect(process.env.MDB_URI);
+
+const io = new Server(process.env.PORT || 8000, {
   cors: {
     origin: "http://localhost:5173",
   },
+});
+
+io.on("connection", (soc) => {
+  onConnection(soc, io);
 });
