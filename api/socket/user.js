@@ -10,9 +10,9 @@ const login = async (data, id, io) => {
         const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
 
         io.emit("logres", {
-          name: user.name,
-          email: user.email,
-          avatar: user.avatar,
+          name: user.Name,
+          email: user.Email,
+          avatar: user.Avatar,
           token: tok,
         });
       } else {
@@ -25,7 +25,7 @@ const login = async (data, id, io) => {
 };
 
 const signupUser = async (data, io) => {
-  const chk = await Usermodel.find({ email: data.email });
+  const chk = await userModel.find({ email: data.email });
   if (chk[0]) {
     io.emit("supres", { status: "Email already exists" });
   } else {
@@ -34,4 +34,4 @@ const signupUser = async (data, io) => {
   }
 };
 
-module.exports = { login };
+module.exports = { login, signupUser };

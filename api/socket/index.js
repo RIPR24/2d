@@ -1,4 +1,4 @@
-const { login } = require("./user");
+const { login, signupUser } = require("./user");
 
 const onConnection = (socket, io) => {
   console.log(socket.id);
@@ -10,6 +10,9 @@ const onConnection = (socket, io) => {
   });
   socket.on("login", (data) => {
     login(data, socket.id, io);
+  });
+  socket.on("signup", (data) => {
+    signupUser(data, io);
   });
 };
 
