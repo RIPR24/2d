@@ -24,4 +24,14 @@ const login = async (data, id, io) => {
   }
 };
 
+const signupUser = async (data, io) => {
+  const chk = await Usermodel.find({ email: data.email });
+  if (chk[0]) {
+    io.emit("supres", { status: "Email already exists" });
+  } else {
+    const user = await Usermodel.create(data);
+    io.emit("supres", { status: "success" });
+  }
+};
+
 module.exports = { login };
