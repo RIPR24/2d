@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSocket } from "../context/TwoDcontext";
+import { googleLogout, useGoogleLogin } from "@react-oauth/google";
+import { SocketContext, User } from "../context/TwoDcontext";
 type info = {
   email: string;
   pass: string;
@@ -9,7 +10,7 @@ type info = {
 const LoginCon = () => {
   const [disable, setDisable] = useState(false);
   const [prob, setProb] = useState("");
-  const socket = useSocket();
+  const { socket, setUser } = useContext(SocketContext);
   const [info, setInfo] = useState<info>({
     email: "",
     pass: "",
@@ -26,7 +27,41 @@ const LoginCon = () => {
     socket?.emit("login", { email: "abc" });
   };
 
-  const googleLogin = async () => {};
+  const responseGoogle = async (authRes: any) => {
+    try {
+      if (authRes.code) {
+        socket?.emit("glogin", { code: authRes.code });
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: "auth-code",
+  });
+
+  const logs = (data: User) => {
+    if (data?.token && setUser) {
+      setUser(data);
+      navigate("/canvas");
+    }
+  };
+
+  useEffect(() => {
+    socket?.on("logres", (data) => {
+      logs(data);
+    });
+    socket?.on("glogres", (data) => {
+      googleLogout();
+      logs(data);
+    });
+    socket?.on("logerr", (data) => {
+      setProb(data.status);
+    });
+  }, []);
 
   return (
     <div className="con">

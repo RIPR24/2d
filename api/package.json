@@ -12,6 +12,7 @@
   "description": "",
   "dependencies": {
     "dotenv": "^16.4.5",
+    "google-auth-library": "^9.14.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.8.0",
     "nodemon": "^3.1.7",

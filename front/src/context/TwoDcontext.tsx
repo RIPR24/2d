@@ -1,7 +1,8 @@
+import { GoogleOAuthProvider } from "@react-oauth/google";
 import { createContext, useContext, useMemo, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
-type User = {
+export type User = {
   name: string;
   email: string;
   avatar: string;
@@ -18,7 +19,7 @@ export interface socketContextInterface {
   setUser: React.Dispatch<React.SetStateAction<User>> | null;
 }
 
-const SocketContext = createContext<socketContextInterface>({
+export const SocketContext = createContext<socketContextInterface>({
   socket: undefined,
   user: null,
   setUser: null,
@@ -37,7 +38,9 @@ const TwoDcontext = ({ children }: props) => {
 
   return (
     <SocketContext.Provider value={{ socket, user, setUser }}>
-      {children}
+      <GoogleOAuthProvider clientId="85449916853-ilvmr3fr74rmit72esdsbvoptgvbr1m3.apps.googleusercontent.com">
+        {children}
+      </GoogleOAuthProvider>
     </SocketContext.Provider>
   );
 };

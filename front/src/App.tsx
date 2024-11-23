@@ -1,9 +1,10 @@
-import LoginCon from "./login/LoginCon";
+import { Outlet } from "react-router-dom";
 
 function App() {
   return (
     <>
-      <LoginCon />
+      <p>Yolo</p>
+      <Outlet />
     </>
   );
 }
