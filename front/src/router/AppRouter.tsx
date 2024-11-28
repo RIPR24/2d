@@ -1,6 +1,5 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Login from "../login/LoginCon";
 import Canvas from "../canvas";
 import LoginCon from "../login/LoginCon";
 import SignupCon from "../login/SignupCon";
@@ -13,23 +12,17 @@ export const router = createBrowserRouter(
       element: <App />,
       children: [
         {
-          path: "",
-          element: <Login />,
-          children: [
-            {
-              path: "/login",
-              element: <LoginCon />,
-              index: true,
-            },
-            {
-              path: "/signup",
-              element: <SignupCon />,
-            },
-          ],
+          path: "/login",
+          element: <LoginCon />,
+          index: true,
         },
         {
           path: "/canvas",
           element: <Canvas />,
+        },
+        {
+          path: "/signup",
+          element: <SignupCon />,
         },
       ],
     },

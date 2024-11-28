@@ -7,3 +7,8 @@
 .av {
   position: absolute;
 }
+
+.av img {
+  height: 100px;
+  width: 100px;
+}

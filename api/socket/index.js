@@ -1,13 +1,11 @@
-const { login, signupUser, glogin } = require("./user");
+const { removeLog, setCoor } = require("./logs");
+const { login, signupUser, glogin, loginViaToken } = require("./user");
 
-let logs = [];
 const onConnection = (socket, io) => {
   console.log(socket.id);
 
   socket.on("disconnect", () => {
-    logs = logs.filter((el) => {
-      el.sid !== socket.id;
-    });
+    removeLog(socket.id);
   });
   socket.on("login", (data) => {
     login(data, socket.id, io);
@@ -17,6 +15,12 @@ const onConnection = (socket, io) => {
   });
   socket.on("glogin", (data) => {
     glogin(data, socket.id, io);
+  });
+  socket.on("logtok", (data) => {
+    loginViaToken(data, socket.id, io);
+  });
+  socket.on("posup", (data) => {
+    setCoor(socket.id, data);
   });
 };
 

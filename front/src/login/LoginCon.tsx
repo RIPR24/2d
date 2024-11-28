@@ -23,8 +23,18 @@ const LoginCon = () => {
   };
 
   const login = async () => {
-    setDisable(true);
-    socket?.emit("login", { email: "abc" });
+    const reg =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    //email Validation
+    if (reg.test(info.email)) {
+      setDisable(true);
+      socket?.emit("login", {
+        email: info.email,
+        password: info.pass,
+      });
+    } else {
+      setProb("Enter Valid email");
+    }
   };
 
   const responseGoogle = async (authRes: any) => {
@@ -46,9 +56,18 @@ const LoginCon = () => {
   const logs = (data: User) => {
     if (data?.token && setUser) {
       setUser(data);
+      localStorage.setItem("curtok", data.token);
       navigate("/canvas");
     }
   };
+
+  useEffect(() => {
+    const tok = localStorage.getItem("curtok");
+    if (tok) {
+      localStorage.removeItem("curtok");
+      socket?.emit("logtok", { token: tok });
+    }
+  }, []);
 
   useEffect(() => {
     socket?.on("logres", (data) => {
@@ -60,6 +79,7 @@ const LoginCon = () => {
     });
     socket?.on("logerr", (data) => {
       setProb(data.status);
+      setDisable(false);
     });
   }, []);
 

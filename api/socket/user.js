@@ -1,17 +1,19 @@
 const userModel = require("../Models/UserModel");
 const jwt = require("jsonwebtoken");
 const { OAuth2Client } = require("google-auth-library");
+const server = require("../server");
+const { logEntry } = require("./logs");
 require("dotenv").config();
 
 const login = async (data, id, io) => {
   const user = await userModel.findOne({ Email: data.email });
   if (user) {
-    if (user.Password.length === 0) {
+    if (user.Password === "google") {
       io.emit("logerr", { status: "Loggedin with google" });
     } else {
       if (user.Password === data.password) {
         const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
-
+        logEntry(id, user.Name, user.Avatar);
         io.to(id).emit("logres", {
           name: user.Name,
           email: user.Email,
@@ -25,6 +27,24 @@ const login = async (data, id, io) => {
   } else {
     io.to(id).emit("logerr", { status: "Wrong email or user doesn't exist" });
   }
+};
+
+const loginViaToken = async (data, id, io) => {
+  jwt.verify(data.token, process.env.ACCESS_SECRET, async (err, uid) => {
+    if (!err) {
+      const user = await userModel.findById(uid);
+      if (user) {
+        const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
+        logEntry(id, user.Name, user.Avatar);
+        io.to(id).emit("logres", {
+          name: user.Name,
+          email: user.Email,
+          avatar: user.Avatar,
+          token: tok,
+        });
+      }
+    }
+  });
 };
 
 const signupUser = async (data, io) => {
@@ -42,7 +62,7 @@ const glogin = async (data, id, io) => {
   const user = await userModel.findOne({ Email: gres.email });
   if (user) {
     const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
-
+    logEntry(id, user.Name, user.Avatar);
     io.to(id).emit("logres", {
       name: user.Name,
       email: user.Email,
@@ -93,4 +113,9 @@ const getCred = async (code) => {
   }
 };
 
-module.exports = { login, signupUser, glogin };
+module.exports = {
+  login,
+  signupUser,
+  glogin,
+  loginViaToken,
+};

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSocket } from "../context/TwoDcontext";
 
 type info = {
   name: string;
@@ -12,6 +13,7 @@ const SignupCon = () => {
   const navigate = useNavigate();
   const [disable, setDisable] = useState(false);
   const [prob, setProb] = useState("");
+  const socket = useSocket();
   const [info, setInfo] = useState<info>({
     name: "",
     email: "",
@@ -28,8 +30,10 @@ const SignupCon = () => {
         //email Validation
         if (info.pass === info.cpass) {
           setDisable(true);
-
-          setDisable(false);
+          socket?.emit("login", {
+            email: info.email,
+            password: info.pass,
+          });
         } else {
           setProb("Password did not match");
         }
@@ -45,6 +49,16 @@ const SignupCon = () => {
     const val = e.target.value;
     setInfo({ ...info, [e.target.id]: val });
   };
+
+  useEffect(() => {
+    socket?.on("supres", (data) => {
+      if (data.status === "success") {
+        navigate("/login");
+      } else {
+        setProb(data.status);
+      }
+    });
+  }, []);
 
   return (
     <div className="con">
@@ -95,7 +109,7 @@ const SignupCon = () => {
           Signup
         </button>
         <p>
-          Don't have an account?{" "}
+          Already have an account?{" "}
           <span
             onClick={() => {
               navigate("/login");
@@ -103,7 +117,7 @@ const SignupCon = () => {
             style={{ color: "#106fe3", cursor: "pointer" }}
           >
             {" "}
-            Signup
+            login
           </span>
         </p>
       </div>
