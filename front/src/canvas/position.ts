@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { useSocket } from "../context/TwoDcontext";
+import { useContext, useEffect, useState } from "react";
+import { SocketContext } from "../context/TwoDcontext";
 
 export type user_pos = {
   coor: {
@@ -11,24 +11,32 @@ export type user_pos = {
   Avatar: string;
 };
 
-type pos = {
-  user: user_pos | undefined;
-  others: user_pos[];
-};
-
 const usePosition = () => {
-  const socket = useSocket();
-  const [pos, setPos] = useState<pos>();
+  const { socket, userpos } = useContext(SocketContext);
+  const [pos, setPos] = useState<{ others: user_pos[]; near: user_pos[] }>();
 
   useEffect(() => {
     socket?.on("posupdate", (data: user_pos[]) => {
-      const user = data.find((el) => el.sid === socket.id);
-      const dat = [...data].filter((el) => el.sid !== socket.id);
-
-      setPos({ user, others: dat });
+      const near: user_pos[] = [];
+      const others: user_pos[] = [];
+      data.forEach((el) => {
+        if (el.sid !== socket.id) {
+          others.push(el);
+          if (
+            userpos.x - el.coor.x < 5 &&
+            userpos.x - el.coor.x > -5 &&
+            userpos.y - el.coor.y < 5 &&
+            userpos.y - el.coor.y > -5
+          ) {
+            near.push(el);
+          }
+        }
+      });
+      others.sort((a, b) => a.coor.y - b.coor.y);
+      setPos({ near, others });
     });
-  }, []);
-
+  }, [userpos]);
+  console.log(pos?.near);
   return pos;
 };
 

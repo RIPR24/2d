@@ -9,6 +9,11 @@ export type User = {
   token: string;
 } | null;
 
+export type userpos = {
+  x: number;
+  y: number;
+};
+
 type props = {
   children: JSX.Element;
 };
@@ -17,12 +22,16 @@ export interface socketContextInterface {
   socket: Socket | undefined;
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User>> | null;
+  userpos: userpos;
+  setUserpos: React.Dispatch<React.SetStateAction<userpos>> | null;
 }
 
 export const SocketContext = createContext<socketContextInterface>({
   socket: undefined,
   user: null,
   setUser: null,
+  userpos: { x: 50, y: 50 },
+  setUserpos: null,
 });
 
 export const useSocket = () => {
@@ -35,9 +44,12 @@ const TwoDcontext = ({ children }: props) => {
     return io("http://localhost:8000/");
   }, []);
   const [user, setUser] = useState<User>(null);
+  const [userpos, setUserpos] = useState<userpos>({ x: 50, y: 50 });
 
   return (
-    <SocketContext.Provider value={{ socket, user, setUser }}>
+    <SocketContext.Provider
+      value={{ socket, user, setUser, userpos, setUserpos }}
+    >
       <GoogleOAuthProvider clientId="85449916853-ilvmr3fr74rmit72esdsbvoptgvbr1m3.apps.googleusercontent.com">
         {children}
       </GoogleOAuthProvider>

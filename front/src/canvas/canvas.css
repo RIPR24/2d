@@ -4,6 +4,12 @@
   position: relative;
 }
 
+.bgimg {
+  position: absolute;
+  height: 10vh;
+  width: 8vw;
+}
+
 .av {
   position: absolute;
 }

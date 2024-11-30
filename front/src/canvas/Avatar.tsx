@@ -19,6 +19,7 @@ const Avatar = ({ user }: props) => {
         left: `${user?.coor.x || 0}%`,
       }}
     >
+      {user && <p className="user-name">{user.Name}</p>}
       {user && <img src={av}></img>}
     </div>
   );

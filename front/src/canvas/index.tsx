@@ -1,32 +1,16 @@
 import { useContext, useEffect } from "react";
-import Avatar from "./Avatar";
-import usePosition from "./position";
 import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate } from "react-router-dom";
 import "./canvas.css";
-import controls from "../controls";
+import Others from "./others";
+import User from "./User";
+import Backg from "./Backg";
 
 const Canvas = () => {
-  const pos = usePosition();
-  const { user, socket } = useContext(SocketContext);
+  const { user } = useContext(SocketContext);
   const navigate = useNavigate();
-  let up = false;
-
-  function mov(code: string) {
-    if (up) {
-      up = false;
-      const con = controls(code, pos?.user?.coor);
-      if (con) {
-        socket?.emit("posup", con);
-      }
-    }
-  }
 
   useEffect(() => {
-    up = true;
-    document.addEventListener("keydown", (e) => {
-      mov(e.code);
-    });
     if (!user?.token) {
       navigate("/login");
     }
@@ -34,14 +18,9 @@ const Canvas = () => {
 
   return (
     <div id="canvas">
-      <Avatar user={pos?.user} />
-      {pos?.others && (
-        <>
-          {pos.others.map((el) => {
-            return <Avatar key={el.sid} user={el} />;
-          })}
-        </>
-      )}
+      <Backg />
+      <Others />
+      <User />
     </div>
   );
 };
