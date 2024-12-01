@@ -1,7 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../context/TwoDcontext";
-import av from "../assets/avatars/av1.svg";
+import av1 from "../assets/avatars/av1.svg";
+import av2 from "../assets/avatars/av2.svg";
+import av3 from "../assets/avatars/av3.svg";
+import av4 from "../assets/avatars/av4.svg";
+import ufo from "../assets/avatars/ufo.svg";
 import controls from "./controls";
+
+const av = [av1, av2, av3, av4];
 
 const User = () => {
   const { socket, userpos, setUserpos, user } = useContext(SocketContext);
@@ -41,7 +47,12 @@ const User = () => {
       }}
     >
       <p className="user-text">YOU</p>
-      {user?.avatar && <img src={av}></img>}
+      {user?.avatar && (
+        <div style={{ position: "relative" }}>
+          <img src={ufo} className="ufo"></img>
+          <img src={av[+user.avatar - 1]} className="usr"></img>
+        </div>
+      )}
     </div>
   );
 };

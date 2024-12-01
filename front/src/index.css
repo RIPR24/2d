@@ -85,6 +85,12 @@ button:focus-visible {
   height: 100%;
 }
 
+.nav {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

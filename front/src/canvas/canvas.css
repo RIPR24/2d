@@ -2,19 +2,106 @@
   height: 100%;
   width: 100%;
   position: relative;
+  background-image: url(../assets/bck/strs1.jpg);
+  overflow: hidden;
 }
 
 .bgimg {
   position: absolute;
   height: 10vh;
   width: 8vw;
+  animation: hov 40s infinite;
 }
 
 .av {
   position: absolute;
+  animation: hovufo 5s infinite;
 }
 
-.av img {
-  height: 100px;
-  width: 100px;
+.ufo {
+  height: 15vh;
+  width: 15vh;
+}
+.usr {
+  height: 5vh;
+  width: 5vh;
+  position: absolute;
+  top: 15%;
+  right: 32%;
+}
+
+.rot {
+  animation: rot 20s infinite;
+}
+.spin {
+  animation: spin 120s infinite;
+}
+.mov::after {
+  content: "";
+  position: absolute;
+  border-bottom: 10px solid aliceblue;
+  top: 60%;
+  left: 50%;
+}
+
+@keyframes hov {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 30%;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@keyframes hovufo {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 5%;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+@keyframes spin {
+  0% {
+    rotate: 0deg;
+  }
+  50% {
+    rotate: 180deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
+
+@keyframes rot {
+  0% {
+    translate: 0 0px;
+    rotate: 0;
+  }
+  20% {
+    translate: 20px 50px;
+    rotate: 20deg;
+  }
+  25% {
+    translate: 20px 50px;
+    rotate: 25deg;
+  }
+  60% {
+    translate: 10px 55px;
+    rotate: 55deg;
+  }
+  70% {
+    translate: 20px 55px;
+    rotate: 60deg;
+  }
+  100% {
+    translate: 0 0px;
+    rotate: 0;
+  }
 }

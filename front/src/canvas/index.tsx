@@ -5,6 +5,7 @@ import "./canvas.css";
 import Others from "./others";
 import User from "./User";
 import Backg from "./Backg";
+import Nav from "../Nav";
 
 const Canvas = () => {
   const { user } = useContext(SocketContext);
@@ -21,6 +22,7 @@ const Canvas = () => {
       <Backg />
       <Others />
       <User />
+      <Nav />
     </div>
   );
 };

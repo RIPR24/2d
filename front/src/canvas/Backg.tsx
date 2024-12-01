@@ -8,12 +8,12 @@ const Backg = () => {
     <>
       <img
         src={bg1}
-        className="bgimg"
+        className="bgimg spin"
         style={{ top: "10%", left: "10%", animationDelay: "1s" }}
       />
       <img
         src={bg2}
-        className="bgimg"
+        className="bgimg rot"
         style={{ top: "33%", left: "78%", animationDelay: ".1s" }}
       />
       <img
