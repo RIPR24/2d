@@ -24,6 +24,8 @@ export interface socketContextInterface {
   setUser: React.Dispatch<React.SetStateAction<User>> | null;
   userpos: userpos;
   setUserpos: React.Dispatch<React.SetStateAction<userpos>> | null;
+  remoff: string | null;
+  setRemoff: React.Dispatch<React.SetStateAction<string | null>> | null;
 }
 
 export const SocketContext = createContext<socketContextInterface>({
@@ -32,6 +34,8 @@ export const SocketContext = createContext<socketContextInterface>({
   setUser: null,
   userpos: { x: 50, y: 50 },
   setUserpos: null,
+  remoff: null,
+  setRemoff: null,
 });
 
 export const useSocket = () => {
@@ -45,10 +49,11 @@ const TwoDcontext = ({ children }: props) => {
   }, []);
   const [user, setUser] = useState<User>(null);
   const [userpos, setUserpos] = useState<userpos>({ x: 50, y: 50 });
+  const [remoff, setRemoff] = useState<string | null>(null);
 
   return (
     <SocketContext.Provider
-      value={{ socket, user, setUser, userpos, setUserpos }}
+      value={{ socket, user, setUser, userpos, setUserpos, setRemoff, remoff }}
     >
       <GoogleOAuthProvider clientId="85449916853-ilvmr3fr74rmit72esdsbvoptgvbr1m3.apps.googleusercontent.com">
         {children}
