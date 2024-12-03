@@ -3,6 +3,7 @@ import App from "../App";
 import Canvas from "../canvas";
 import LoginCon from "../login/LoginCon";
 import SignupCon from "../login/SignupCon";
+import ConnectUser from "../Connect";
 import Notfound from "./Notfound";
 
 export const router = createBrowserRouter(
@@ -23,6 +24,10 @@ export const router = createBrowserRouter(
         {
           path: "/signup",
           element: <SignupCon />,
+        },
+        {
+          path: "/connect/:sid",
+          element: <ConnectUser />,
         },
       ],
     },

@@ -30,6 +30,22 @@
   right: 32%;
 }
 
+.near {
+  background-color: #353535;
+  border-radius: 10px;
+  border: 1px solid aliceblue;
+  padding: 10px 20px;
+}
+
+.near p {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+.near button {
+  margin: 5px;
+}
+
 .rot {
   animation: rot 20s infinite;
 }

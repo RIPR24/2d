@@ -1,19 +1,36 @@
+import { useNavigate } from "react-router-dom";
 import Avatar from "./Avatar";
 import usePosition from "./position";
 
 const Others = () => {
   const pos = usePosition();
+  const navigate = useNavigate();
 
   return (
     <div>
       {pos && (
         <>
-          <div style={{ position: "absolute", top: 5, right: 5 }}>
+          <div
+            style={{
+              position: "absolute",
+              top: 50,
+              right: 20,
+              display: "flex",
+              flexDirection: "column",
+              gap: 20,
+            }}
+          >
             {pos.near.map((el) => {
               return (
-                <div className="near">
+                <div key={el.sid} className="near">
                   <p>{el.Name}</p>
-                  <button>Call</button>
+                  <button
+                    onClick={() => {
+                      navigate(`/connect/${el.sid}`);
+                    }}
+                  >
+                    Connect
+                  </button>
                 </div>
               );
             })}

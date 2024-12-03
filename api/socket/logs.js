@@ -1,4 +1,5 @@
 const logs = new Map();
+const conlogs = new Map();
 const getLogs = () => {
   return Array.from(logs, ([i, j]) => ({ ...j, sid: i }));
 };
@@ -19,4 +20,22 @@ const logEntry = (id, name, av) => {
   });
 };
 
-module.exports = { getLogs, setCoor, removeLog, logEntry };
+const addCon = (sid, sid2) => {
+  conlogs.set(sid, sid2);
+};
+const removeCon = (sid) => {
+  logs.delete(sid);
+};
+const checkCon = (sid) => {
+  return conlogs.has(sid);
+};
+
+module.exports = {
+  getLogs,
+  setCoor,
+  removeLog,
+  logEntry,
+  addCon,
+  removeCon,
+  checkCon,
+};

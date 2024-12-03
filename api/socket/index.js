@@ -1,9 +1,13 @@
 const { removeLog, setCoor } = require("./logs");
-const { login, signupUser, glogin, loginViaToken } = require("./user");
+const {
+  login,
+  signupUser,
+  glogin,
+  loginViaToken,
+  changeAvatar,
+} = require("./user");
 
 const onConnection = (socket, io) => {
-  console.log(socket.id);
-
   socket.on("disconnect", () => {
     removeLog(socket.id);
   });
@@ -22,6 +26,7 @@ const onConnection = (socket, io) => {
   socket.on("posup", (data) => {
     setCoor(socket.id, data);
   });
+  socket.on("avcng", changeAvatar);
 };
 
 module.exports = onConnection;
