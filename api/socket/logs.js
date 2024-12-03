@@ -19,6 +19,9 @@ const logEntry = (id, name, av) => {
     Avatar: av,
   });
 };
+const checkLog = (sid) => {
+  return logs.has(sid);
+};
 
 const addCon = (sid, sid2) => {
   conlogs.set(sid, sid2);
@@ -38,4 +41,5 @@ module.exports = {
   addCon,
   removeCon,
   checkCon,
+  checkLog,
 };
