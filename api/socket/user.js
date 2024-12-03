@@ -92,6 +92,18 @@ const glogin = async (data, id, io) => {
   }
 };
 
+const changeAvatar = (data) => {
+  jwt.verify(data.token, process.env.ACCESS_SECRET, async (err, uid) => {
+    if (!err) {
+      const user = await userModel.findById(uid);
+      if (user) {
+        user.Avatar = +data.av;
+        user.save();
+      }
+    }
+  });
+};
+
 const getCred = async (code) => {
   try {
     const oauth2Client = new OAuth2Client(
@@ -118,4 +130,5 @@ module.exports = {
   signupUser,
   glogin,
   loginViaToken,
+  changeAvatar,
 };

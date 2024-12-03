@@ -36,7 +36,6 @@ const usePosition = () => {
       setPos({ near, others });
     });
   }, [userpos]);
-  console.log(pos?.near);
   return pos;
 };
 
