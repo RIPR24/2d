@@ -26,7 +26,7 @@ export const router = createBrowserRouter(
           element: <SignupCon />,
         },
         {
-          path: "/connect/:sid",
+          path: "/connect/:sid/:call",
           element: <ConnectUser />,
         },
       ],

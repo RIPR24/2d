@@ -1,4 +1,5 @@
-const { removeLog, setCoor } = require("./logs");
+const { Connreq, sendOffer } = require("./connection");
+const { removeLog, setCoor, checkCon, getCon, removeCon } = require("./logs");
 const {
   login,
   signupUser,
@@ -10,6 +11,11 @@ const {
 const onConnection = (socket, io) => {
   socket.on("disconnect", () => {
     removeLog(socket.id);
+    if (checkCon(socket.id)) {
+      const osid = getCon(socket.id);
+      io.to(osid).emit("conreq-res", { status: "User Disconnected" });
+      removeCon(socket.id, osid);
+    }
   });
   socket.on("login", (data) => {
     login(data, socket.id, io);
@@ -27,6 +33,21 @@ const onConnection = (socket, io) => {
     setCoor(socket.id, data);
   });
   socket.on("avcng", changeAvatar);
+  socket.on("connect-req", (data) => {
+    Connreq(socket.id, data, io);
+  });
+  socket.on("conn-req-res", (data) => {
+    io.to(data.sid).emit("conreq-res", data);
+  });
+  socket.on("connect-offer", (data) => {
+    sendOffer(socket.id, data, io);
+  });
+  socket.on("connans", (data) => {
+    io.to(data.sid).emit("Conn-ans", data);
+  });
+  socket.on("iceCan", (data) => {
+    io.to(data.sid).emit("rec-ice", data.ice);
+  });
 };
 
 module.exports = onConnection;

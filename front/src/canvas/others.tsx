@@ -26,7 +26,7 @@ const Others = () => {
                   <p>{el.Name}</p>
                   <button
                     onClick={() => {
-                      navigate(`/connect/${el.sid}`);
+                      navigate(`/connect/${el.sid}/T`);
                     }}
                   >
                     Connect

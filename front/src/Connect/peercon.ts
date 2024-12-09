@@ -5,6 +5,7 @@ class PeerService {
       iceServers: [
         {
           urls: [
+            "stun:stun1.l.google.com:19302",
             "stun:stun.l.google.com:19302",
             "stun:global.stun.twilio.com:3478",
           ],
@@ -25,6 +26,12 @@ class PeerService {
   async setLocal(ans: RTCSessionDescription) {
     if (this.peercon) {
       this.peercon.setRemoteDescription(ans);
+    }
+  }
+
+  async setIce(ice: RTCIceCandidateInit) {
+    if (this.peercon) {
+      this.peercon.addIceCandidate(ice);
     }
   }
 

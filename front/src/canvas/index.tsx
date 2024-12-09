@@ -11,11 +11,10 @@ import IncomingReq from "./IncomingReq";
 export type increq = {
   sid: string;
   name: string;
-  offer: string;
 } | null;
 
 const Canvas = () => {
-  const { user } = useContext(SocketContext);
+  const { user, socket } = useContext(SocketContext);
   const navigate = useNavigate();
   const [increq, setIncreq] = useState<increq>(null);
 
@@ -23,6 +22,9 @@ const Canvas = () => {
     if (!user?.token) {
       navigate("/login");
     }
+    socket?.on("connreq", (data) => {
+      setIncreq(data);
+    });
   });
 
   return (
@@ -31,7 +33,7 @@ const Canvas = () => {
       <Others />
       <User />
       <Nav />
-      <IncomingReq increq={increq} setIncreq={setIncreq} />
+      {increq?.sid && <IncomingReq increq={increq} setIncreq={setIncreq} />}
     </div>
   );
 };

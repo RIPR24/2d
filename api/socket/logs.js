@@ -26,8 +26,14 @@ const checkLog = (sid) => {
 const addCon = (sid, sid2) => {
   conlogs.set(sid, sid2);
 };
-const removeCon = (sid) => {
-  logs.delete(sid);
+const removeCon = (sid, osid) => {
+  if (conlogs.has(sid)) {
+    conlogs.delete(osid);
+    conlogs.delete(sid);
+  }
+};
+const getCon = (sid) => {
+  return conlogs.get(sid);
 };
 const checkCon = (sid) => {
   return conlogs.has(sid);
@@ -42,4 +48,5 @@ module.exports = {
   removeCon,
   checkCon,
   checkLog,
+  getCon,
 };
