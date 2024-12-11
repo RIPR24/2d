@@ -31,13 +31,12 @@ export default function usePeer(
     });
 
     peer.addEventListener("track", (e) => {
-      const remoteStrm = new MediaStream();
-      console.log("got new stream");
-      e.streams[0].getTracks().forEach((trk) => {
-        remoteStrm.addTrack(trk);
-      });
-      setRmtstr(remoteStrm);
+      console.log("got stream", e.streams[0].getTracks());
+      setRmtstr(e.streams[0]);
     });
+    peer.ondatachannel = (e) => {
+      console.log("data chanel opend");
+    };
     return { peer };
   } catch (error) {
     console.log(error);

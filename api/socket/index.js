@@ -1,5 +1,12 @@
 const { Connreq, sendOffer } = require("./connection");
-const { removeLog, setCoor, checkCon, getCon, removeCon } = require("./logs");
+const {
+  removeLog,
+  setCoor,
+  checkCon,
+  getCon,
+  removeCon,
+  checkLog,
+} = require("./logs");
 const {
   login,
   signupUser,
@@ -31,6 +38,14 @@ const onConnection = (socket, io) => {
   });
   socket.on("posup", (data) => {
     setCoor(socket.id, data);
+  });
+  socket.on("new-chat", (data) => {
+    if (checkLog(data.sid)) {
+      io.to(socket.id).emit("new-chat-rec", data);
+    }
+  });
+  socket.on("chat-send", (data) => {
+    io.to(data.sid).emit("chat-msg", { ...data, sid: socket.id });
   });
   socket.on("avcng", changeAvatar);
   socket.on("connect-req", (data) => {

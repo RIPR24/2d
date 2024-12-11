@@ -1,10 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import Avatar from "./Avatar";
 import usePosition from "./position";
+import { useSocket } from "../context/TwoDcontext";
 
 const Others = () => {
   const pos = usePosition();
   const navigate = useNavigate();
+  const socket = useSocket();
 
   return (
     <div>
@@ -30,6 +32,13 @@ const Others = () => {
                     }}
                   >
                     Connect
+                  </button>
+                  <button
+                    onClick={() => {
+                      socket?.emit("new-chat", { sid: el.sid, name: el.Name });
+                    }}
+                  >
+                    Chat
                   </button>
                 </div>
               );

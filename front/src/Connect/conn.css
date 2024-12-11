@@ -12,11 +12,9 @@
   text-align: center;
 }
 
-.myvideo {
+.myvid {
   position: absolute;
   right: 30px;
   bottom: 30px;
-  height: 270px;
-  width: 400px;
   border-radius: 10px;
 }

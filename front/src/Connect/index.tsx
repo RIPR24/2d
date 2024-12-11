@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext, useState, useEffect } from "react";
 import "./conn.css";
 import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate, useParams } from "react-router-dom";
@@ -11,12 +11,9 @@ const ConnectUser = () => {
   const [status, setStatus] = useState<string>("");
   const { sid, call } = useParams();
   const [peercon, setPeercon] = useState<RTCPeerConnection | null>(null);
-  const myref = useRef<HTMLVideoElement>(null);
-  const rmtref = useRef<HTMLVideoElement>(null);
   const [mystr, setMystr] = useState<MediaStream>(new MediaStream());
   const [rmtstr, setRmtstr] = useState<MediaStream>(new MediaStream());
   const navigate = useNavigate();
-  let chat: RTCDataChannel | null = null;
 
   const sendReq = () => {
     setStatus("request sent");
@@ -25,8 +22,8 @@ const ConnectUser = () => {
 
   const sendOffer = async () => {
     if (sid) {
+      const str = await getMedia("V");
       const { peer } = usePeer(sid || "", socket, setRmtstr);
-      const str = await getMedia();
       setMystr(str);
       if (peer) {
         if (str) {
@@ -60,7 +57,7 @@ const ConnectUser = () => {
   }) => {
     if (data.sid) {
       const { peer } = usePeer(sid || "", socket, setRmtstr);
-      const str = await getMedia();
+      const str = await getMedia("V");
       setMystr(str);
       if (peer) {
         if (str) {
@@ -71,12 +68,6 @@ const ConnectUser = () => {
         await peer.setRemoteDescription(data.offer);
         const ans = await peer.createAnswer(data.offer);
         await peer.setLocalDescription(ans);
-        peer.ondatachannel = (e) => {
-          chat = e.channel;
-          chat.addEventListener("message", (e) => {
-            console.log(e.data, "msg");
-          });
-        };
         setPeercon(peer);
         socket?.emit("connans", { sid: data.sid, ans });
         setStatus("connected");
@@ -94,33 +85,24 @@ const ConnectUser = () => {
   };
 
   useEffect(() => {
-    if (call && call === "T") {
+    if (call && call !== "F" && !peercon) {
       sendReq();
     }
     socket?.on("conreq-res", conres);
     socket?.on("connoffer", recOffer);
     socket?.on("Conn-ans", recAns);
     socket?.on("rec-ice", recIce);
-    if (myref.current) {
-      myref.current.srcObject = mystr;
-    }
-    if (rmtref.current) {
-      rmtref.current.srcObject = rmtstr;
-    }
-  }, []);
+  }, [peercon]);
 
   return (
     <div className="connectcon">
       {status === "connected" ? (
         <>
-          <div className="buttons">
-            <button>Call</button>
-            <button>Video Call</button>
-            <button>File Transfer</button>
+          <div className="myvid">
+            <ReactPlayer muted url={mystr} height={250} width={350} playing />
           </div>
-          <div>
-            <ReactPlayer url={mystr} height={250} width={350} playing />
-            <ReactPlayer url={rmtstr} height={250} width={350} playing />
+          <div className="rmtvid">
+            <ReactPlayer url={rmtstr} height={"80vh"} width={"80vw"} playing />
           </div>
         </>
       ) : (

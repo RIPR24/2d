@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate } from "react-router-dom";
 import "./canvas.css";
@@ -7,6 +7,7 @@ import User from "./User";
 import Backg from "./Backg";
 import Nav from "../Nav";
 import IncomingReq from "./IncomingReq";
+import Chat from "./Chat";
 
 export type increq = {
   sid: string;
@@ -33,6 +34,7 @@ const Canvas = () => {
       <Others />
       <User />
       <Nav />
+      <Chat />
       {increq?.sid && <IncomingReq increq={increq} setIncreq={setIncreq} />}
     </div>
   );

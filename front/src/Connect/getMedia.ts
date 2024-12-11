@@ -1,4 +1,4 @@
-const getMedia = async () => {
+const getMedia = async (type: string) => {
   const calob = new MediaStream();
   try {
     const aud = await navigator.mediaDevices.getUserMedia({
