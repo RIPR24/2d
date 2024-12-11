@@ -2,6 +2,9 @@ import { useNavigate } from "react-router-dom";
 import Avatar from "./Avatar";
 import usePosition from "./position";
 import { useSocket } from "../context/TwoDcontext";
+import chat from "../assets/icons/chat.svg";
+import screen from "../assets/icons/screen.svg";
+import vid from "../assets/icons/video.svg";
 
 const Others = () => {
   const pos = usePosition();
@@ -26,20 +29,29 @@ const Others = () => {
               return (
                 <div key={el.sid} className="near">
                   <p>{el.Name}</p>
-                  <button
-                    onClick={() => {
-                      navigate(`/connect/${el.sid}/T`);
-                    }}
-                  >
-                    Connect
-                  </button>
-                  <button
-                    onClick={() => {
-                      socket?.emit("new-chat", { sid: el.sid, name: el.Name });
-                    }}
-                  >
-                    Chat
-                  </button>
+                  <div className="btns">
+                    <img
+                      src={vid}
+                      onClick={() => {
+                        navigate(`/connect/${el.sid}/V`);
+                      }}
+                    />
+                    <img
+                      src={screen}
+                      onClick={() => {
+                        navigate(`/connect/${el.sid}/S`);
+                      }}
+                    />
+                    <img
+                      src={chat}
+                      onClick={() => {
+                        socket?.emit("new-chat", {
+                          sid: el.sid,
+                          name: el.Name,
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
               );
             })}

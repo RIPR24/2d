@@ -30,6 +30,26 @@
   right: 32%;
 }
 
+.btns {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+}
+
+.btns img {
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.btns img:hover {
+  filter: drop-shadow(0 0 15px #390d46);
+  scale: 1.04;
+}
+
+.btns image:active {
+  scale: 0.95;
+}
+
 .chatbox {
   position: fixed;
   bottom: 20px;

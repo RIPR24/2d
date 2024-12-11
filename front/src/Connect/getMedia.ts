@@ -8,13 +8,17 @@ const getMedia = async (type: string) => {
   } catch (error) {
     console.log(error);
   }
-
-  try {
-    const cam = await navigator.mediaDevices.getUserMedia({
-      video: true,
-    });
-    calob.addTrack(cam.getTracks()[0]);
-  } catch (error) {
+  if (type === "V") {
+    try {
+      const cam = await navigator.mediaDevices.getUserMedia({
+        video: true,
+      });
+      calob.addTrack(cam.getTracks()[0]);
+    } catch (error) {
+      const scr = await navigator.mediaDevices.getDisplayMedia();
+      calob.addTrack(scr.getTracks()[0]);
+    }
+  } else {
     const scr = await navigator.mediaDevices.getDisplayMedia();
     calob.addTrack(scr.getTracks()[0]);
   }

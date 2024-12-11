@@ -22,7 +22,7 @@ const ConnectUser = () => {
 
   const sendOffer = async () => {
     if (sid) {
-      const str = await getMedia("V");
+      const str = await getMedia(call || "V");
       const { peer } = usePeer(sid || "", socket, setRmtstr);
       setMystr(str);
       if (peer) {
@@ -34,7 +34,7 @@ const ConnectUser = () => {
         const offer = await peer.createOffer();
         await peer.setLocalDescription(offer);
         setPeercon(peer);
-        socket?.emit("connect-offer", { sid, offer });
+        socket?.emit("connect-offer", { sid, offer, call });
       }
     }
   };
@@ -54,10 +54,11 @@ const ConnectUser = () => {
   const recOffer = async (data: {
     sid: string;
     offer: RTCSessionDescription;
+    call: string;
   }) => {
     if (data.sid) {
       const { peer } = usePeer(sid || "", socket, setRmtstr);
-      const str = await getMedia("V");
+      const str = await getMedia(data.call || "V");
       setMystr(str);
       if (peer) {
         if (str) {
