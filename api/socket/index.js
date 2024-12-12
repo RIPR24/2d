@@ -28,7 +28,7 @@ const onConnection = (socket, io) => {
     login(data, socket.id, io);
   });
   socket.on("signup", (data) => {
-    signupUser(data, io);
+    signupUser(socket.id, data, io);
   });
   socket.on("glogin", (data) => {
     glogin(data, socket.id, io);

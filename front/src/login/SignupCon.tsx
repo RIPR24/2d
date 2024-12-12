@@ -30,9 +30,11 @@ const SignupCon = () => {
         //email Validation
         if (info.pass === info.cpass) {
           setDisable(true);
-          socket?.emit("login", {
-            email: info.email,
-            password: info.pass,
+          socket?.emit("signup", {
+            Email: info.email,
+            Password: info.pass,
+            Name: info.name,
+            Avatar: "1",
           });
         } else {
           setProb("Password did not match");

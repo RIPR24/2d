@@ -47,8 +47,10 @@ const loginViaToken = async (data, id, io) => {
   });
 };
 
-const signupUser = async (data, io) => {
-  const chk = await userModel.find({ email: data.email });
+const signupUser = async (id, data, io) => {
+  const chk = await userModel.find({ Email: data.Email });
+  console.log(chk);
+
   if (chk[0]) {
     io.to(id).emit("supres", { status: "Email already exists" });
   } else {
