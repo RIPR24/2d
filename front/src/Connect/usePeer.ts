@@ -1,11 +1,16 @@
 import { Socket } from "socket.io-client";
+import getMedia from "./getMedia";
 
-export default function usePeer(
+export default async function usePeer(
   sid: string,
   socket: Socket | undefined,
-  setRmtstr: React.Dispatch<React.SetStateAction<MediaStream>>
+  setRmtstr: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
+  setMystr: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
+  call: string | undefined,
+  rmtstr: MediaStream | undefined
 ) {
   try {
+    const str = await getMedia(call || "V");
     const peer = new RTCPeerConnection({
       iceServers: [
         {
@@ -17,6 +22,13 @@ export default function usePeer(
         },
       ],
     });
+
+    if (str) {
+      str.getTracks().forEach((trk) => {
+        peer.addTrack(trk, str);
+      });
+    }
+    setMystr(str);
     //listener
     peer.addEventListener("signalingstatechange", (e) => {
       console.log(e, "new signal!!");
@@ -32,9 +44,11 @@ export default function usePeer(
 
     peer.addEventListener("track", (e) => {
       console.log("got stream", e.streams[0].getTracks());
-      setRmtstr(e.streams[0]);
+      if (!rmtstr) {
+        setRmtstr(e.streams[0]);
+      }
     });
-    peer.ondatachannel = (e) => {
+    peer.ondatachannel = () => {
       console.log("data chanel opend");
     };
     return { peer };

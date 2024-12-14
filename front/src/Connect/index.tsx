@@ -3,7 +3,6 @@ import "./conn.css";
 import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate, useParams } from "react-router-dom";
 import usePeer from "./usePeer";
-import getMedia from "./getMedia";
 import ReactPlayer from "react-player";
 
 const ConnectUser = () => {
@@ -11,8 +10,8 @@ const ConnectUser = () => {
   const [status, setStatus] = useState<string>("");
   const { sid, call } = useParams();
   const [peercon, setPeercon] = useState<RTCPeerConnection | null>(null);
-  const [mystr, setMystr] = useState<MediaStream>(new MediaStream());
-  const [rmtstr, setRmtstr] = useState<MediaStream>(new MediaStream());
+  const [mystr, setMystr] = useState<MediaStream>();
+  const [rmtstr, setRmtstr] = useState<MediaStream>();
   const navigate = useNavigate();
 
   const sendReq = () => {
@@ -22,15 +21,15 @@ const ConnectUser = () => {
 
   const sendOffer = async () => {
     if (sid) {
-      const str = await getMedia(call || "V");
-      const { peer } = usePeer(sid || "", socket, setRmtstr);
-      setMystr(str);
+      const { peer } = await usePeer(
+        sid || "",
+        socket,
+        setRmtstr,
+        setMystr,
+        call,
+        rmtstr
+      );
       if (peer) {
-        if (str) {
-          str.getTracks().forEach((trk) => {
-            peer.addTrack(trk, str);
-          });
-        }
         const offer = await peer.createOffer();
         await peer.setLocalDescription(offer);
         setPeercon(peer);
@@ -57,15 +56,15 @@ const ConnectUser = () => {
     call: string;
   }) => {
     if (data.sid) {
-      const { peer } = usePeer(sid || "", socket, setRmtstr);
-      const str = await getMedia(data.call || "V");
-      setMystr(str);
+      const { peer } = await usePeer(
+        sid || "",
+        socket,
+        setRmtstr,
+        setMystr,
+        data.call,
+        rmtstr
+      );
       if (peer) {
-        if (str) {
-          str.getTracks().forEach((trk) => {
-            peer.addTrack(trk, str);
-          });
-        }
         await peer.setRemoteDescription(data.offer);
         const ans = await peer.createAnswer(data.offer);
         await peer.setLocalDescription(ans);
@@ -102,9 +101,9 @@ const ConnectUser = () => {
           <div className="myvid">
             <ReactPlayer muted url={mystr} height={250} width={350} playing />
           </div>
-          <div className="rmtvid">
+          {rmtstr && (
             <ReactPlayer url={rmtstr} height={"80vh"} width={"80vw"} playing />
-          </div>
+          )}
         </>
       ) : (
         <>

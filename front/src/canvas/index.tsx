@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate } from "react-router-dom";
 import "./canvas.css";
