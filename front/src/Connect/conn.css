@@ -18,3 +18,24 @@
   bottom: 30px;
   border-radius: 10px;
 }
+
+.strm-btns {
+  position: fixed;
+  display: flex;
+  gap: 50px;
+  bottom: 50px;
+  left: 50%;
+  translate: -50% 0;
+}
+.strm-btns div {
+  padding: 20px;
+  border-radius: 50%;
+  height: 30px;
+  width: 30px;
+  display: grid;
+  place-items: center;
+}
+
+.strm-btns div:hover {
+  scale: 1.05;
+}

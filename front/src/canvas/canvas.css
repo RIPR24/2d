@@ -60,17 +60,19 @@
   background-color: rgba(0, 0, 0, 50%);
   backdrop-filter: blur(2px);
   box-sizing: border-box;
+  border-radius: 25px;
 }
 
 .headings {
   display: flex;
-  scroll-behavior: auto;
+  overflow-x: auto;
   color: aliceblue;
   border-bottom: 2px double aliceblue;
   height: 30px;
+  padding-left: 10px;
 }
 .headings p {
-  border: 1px solid aliceblue;
+  border-right: 1px solid aliceblue;
   padding: 1px 5px;
   margin: 0;
   cursor: pointer;
@@ -89,7 +91,12 @@
   height: 45px;
 }
 .typemsg * {
-  padding: 5px;
+  padding: 0 15px;
+  border-radius: 25px;
+}
+
+.typemsg input {
+  font-size: 1.2rem;
 }
 
 .mybub {

@@ -1,10 +1,10 @@
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import hb from "../assets/hambrgr.svg";
 import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate } from "react-router-dom";
 
 const Nav = () => {
-  const { user, socket } = useContext(SocketContext);
+  const { user, socket, setUser } = useContext(SocketContext);
   const [win, setWin] = useState(false);
   const [av, setAv] = useState(user?.avatar);
   const navigate = useNavigate();
@@ -18,8 +18,20 @@ const Nav = () => {
 
   const logout = () => {
     localStorage.clear();
+    if (setUser) setUser(null);
     navigate("/login");
   };
+
+  useEffect(() => {
+    socket?.on("avchng", (data) => {
+      if (setUser) {
+        setUser(data);
+      }
+    });
+    socket?.on("unauth", () => {
+      logout();
+    });
+  }, []);
 
   return (
     <div className="nav">
@@ -53,7 +65,7 @@ const Nav = () => {
               <option value="4">4</option>
             </select>
           </div>
-          <p onClick={logout}>LOGOUT</p>
+          <button onClick={logout}>LOGOUT</button>
         </div>
       )}
     </div>

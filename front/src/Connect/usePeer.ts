@@ -7,10 +7,10 @@ export default async function usePeer(
   setRmtstr: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
   setMystr: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
   call: string | undefined,
-  rmtstr: MediaStream | undefined
+  rmtstr: MediaStream | undefined,
+  mystr: MediaStream | undefined
 ) {
   try {
-    const str = await getMedia(call || "V");
     const peer = new RTCPeerConnection({
       iceServers: [
         {
@@ -22,16 +22,18 @@ export default async function usePeer(
         },
       ],
     });
-
-    if (str) {
-      str.getTracks().forEach((trk) => {
-        peer.addTrack(trk, str);
-      });
+    if (!mystr) {
+      const str = await getMedia(call || "V");
+      if (str) {
+        str.getTracks().forEach((trk) => {
+          peer.addTrack(trk, str);
+        });
+      }
+      setMystr(str);
     }
-    setMystr(str);
     //listener
-    peer.addEventListener("signalingstatechange", (e) => {
-      console.log(e, "new signal!!");
+    peer.addEventListener("signalingstatechange", () => {
+      //console.log(e, "new signal!!");
     });
     peer.addEventListener("icecandidate", (e) => {
       if (e.candidate) {
@@ -43,7 +45,6 @@ export default async function usePeer(
     });
 
     peer.addEventListener("track", (e) => {
-      console.log("got stream", e.streams[0].getTracks());
       if (!rmtstr) {
         setRmtstr(e.streams[0]);
       }

@@ -4,6 +4,7 @@ import { SocketContext } from "../context/TwoDcontext";
 import { useNavigate, useParams } from "react-router-dom";
 import usePeer from "./usePeer";
 import ReactPlayer from "react-player";
+import Strbtns from "./Strbtns";
 
 const ConnectUser = () => {
   const { user, socket } = useContext(SocketContext);
@@ -27,7 +28,8 @@ const ConnectUser = () => {
         setRmtstr,
         setMystr,
         call,
-        rmtstr
+        rmtstr,
+        mystr
       );
       if (peer) {
         const offer = await peer.createOffer();
@@ -41,6 +43,15 @@ const ConnectUser = () => {
   const conres = (data: { status: string }) => {
     if (data.status !== "success") {
       setStatus(data.status);
+      mystr?.getTracks().forEach((trk) => {
+        trk.stop();
+      });
+      setMystr(undefined);
+      if (peercon) {
+        peercon.close();
+        peercon.onicecandidate = null;
+        peercon.ontrack = null;
+      }
       setTimeout(() => {
         navigate("/canvas");
       }, 3000);
@@ -62,7 +73,8 @@ const ConnectUser = () => {
         setRmtstr,
         setMystr,
         data.call,
-        rmtstr
+        rmtstr,
+        mystr
       );
       if (peer) {
         await peer.setRemoteDescription(data.offer);
@@ -94,6 +106,20 @@ const ConnectUser = () => {
     socket?.on("rec-ice", recIce);
   }, [peercon]);
 
+  useEffect(() => {
+    if (!user?.token) {
+      navigate("/login");
+    }
+
+    return () => {
+      socket?.removeListener("conreq-res");
+      socket?.removeListener("connoffer");
+      socket?.removeListener("Conn-ans");
+      socket?.removeListener("rec-ice");
+      console.log("yolo");
+    };
+  }, []);
+
   return (
     <div className="connectcon">
       {status === "connected" ? (
@@ -104,6 +130,12 @@ const ConnectUser = () => {
           {rmtstr && (
             <ReactPlayer url={rmtstr} height={"80vh"} width={"80vw"} playing />
           )}
+          <Strbtns
+            mystr={mystr}
+            peercon={peercon}
+            setMystr={setMystr}
+            setPeercon={setPeercon}
+          />
         </>
       ) : (
         <>
