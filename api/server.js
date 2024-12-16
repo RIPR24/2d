@@ -9,7 +9,11 @@ mongoose.connect(process.env.MDB_URI);
 
 const io = new Server(process.env.PORT || 8000, {
   cors: {
-    origin: process.env.FRONT_END,
+    origin: [
+      process.env.FRONT_END,
+      "https://space-2d.netlify.app",
+      "http://localhost:5173",
+    ],
   },
 });
 
