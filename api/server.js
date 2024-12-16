@@ -9,7 +9,7 @@ mongoose.connect(process.env.MDB_URI);
 
 const io = new Server(process.env.PORT || 8000, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: process.env.FRONT_END,
   },
 });
 
