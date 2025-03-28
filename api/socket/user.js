@@ -4,6 +4,7 @@ const { OAuth2Client } = require("google-auth-library");
 const server = require("../server");
 const { logEntry } = require("./logs");
 require("dotenv").config();
+const { createHmac } = require("crypto");
 
 const login = async (data, id, io) => {
   const user = await userModel.findOne({ Email: data.email });
@@ -11,7 +12,10 @@ const login = async (data, id, io) => {
     if (user.Password === "google") {
       io.emit("logerr", { status: "Loggedin with google" });
     } else {
-      if (user.Password === data.password) {
+      const Password = createHmac("sha256", process.env.KEY)
+        .update(data.Password)
+        .digest("hex");
+      if (user.Password === Password) {
         const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
         logEntry(id, user.Name, user.Avatar);
         io.to(id).emit("logres", {
@@ -48,13 +52,14 @@ const loginViaToken = async (data, id, io) => {
 };
 
 const signupUser = async (id, data, io) => {
-  const chk = await userModel.find({ Email: data.Email });
-  console.log(chk);
-
-  if (chk[0]) {
+  const chk = await userModel.findOne({ Email: data.Email });
+  if (chk) {
     io.to(id).emit("supres", { status: "Email already exists" });
   } else {
-    const user = await userModel.create(data);
+    const Password = createHmac("sha256", process.env.KEY)
+      .update(data.Password)
+      .digest("hex");
+    const user = await userModel.create({ ...data, Password });
     io.to(id).emit("supres", { status: "success" });
   }
 };
