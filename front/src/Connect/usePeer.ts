@@ -17,9 +17,6 @@ export default async function usePeer(
           urls: [
             "stun:stun1.l.google.com:19302",
             "stun:stun2.l.google.com:19302",
-            "numb.viagenie.ca:3478",
-            "s1.taraba.net:3478",
-            "s2.taraba.net:3478",
             "stun.12connect.com:3478",
             "stun.12voip.com:3478",
             "stun.1und1.de:3478",
