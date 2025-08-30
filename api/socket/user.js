@@ -12,10 +12,6 @@ const login = async (data, id, io) => {
     if (user.Password === "google") {
       io.emit("logerr", { status: "Loggedin with google" });
     } else {
-      if (user.Password === data.password) {
-        const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET, {
-          expiresIn: "2h",
-        });
       const Password = createHmac("sha256", process.env.KEY)
         .update(data.Password)
         .digest("hex");
