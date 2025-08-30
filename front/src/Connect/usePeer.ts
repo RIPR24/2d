@@ -17,10 +17,6 @@ export default async function usePeer(
           urls: [
             "stun:stun1.l.google.com:19302",
             "stun:stun2.l.google.com:19302",
-            "stun.12connect.com:3478",
-            "stun.12voip.com:3478",
-            "stun.1und1.de:3478",
-            "stun.2talk.co.nz:3478",
             "stun:stun.l.google.com:5349",
             "stun:stun1.l.google.com:3478",
             "stun:global.stun.twilio.com:3478",
