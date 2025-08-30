@@ -36,6 +36,12 @@ const User = () => {
     document.addEventListener("keyup", () => {
       setMoving(false);
     });
+    return () => {
+      document.removeEventListener("keydown", mov);
+      document.removeEventListener("keyup", () => {
+        setMoving(false);
+      });
+    };
   }, []);
 
   return (
