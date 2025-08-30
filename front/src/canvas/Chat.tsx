@@ -1,4 +1,4 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { SocketContext } from "../context/TwoDcontext";
 
 type msgs = {
@@ -27,7 +27,7 @@ const Chat = () => {
   const [chats, setChats] = useState<chat[]>([]);
   const [curmsgs, setcurmsgs] = useState<chat>();
   const { user, socket } = useContext(SocketContext);
-  const ref = useRef<HTMLInputElement>(null);
+  const [cht, setCht] = useState("");
 
   const addMsg = (data: msginp, isMe: boolean) => {
     console.log(chats);
@@ -65,19 +65,27 @@ const Chat = () => {
   };
 
   const sendMsg = () => {
-    if (ref.current && curmsgs) {
+    if (cht.length > 0 && curmsgs) {
       const val: msginp = {
-        msg: ref.current.value,
+        msg: cht,
         sid: curmsgs.sid,
         name: curmsgs.name,
       };
       addMsg(val, true);
       socket?.emit("chat-send", { ...val, name: user?.name });
-      ref.current.value = "";
+      setCht("");
     }
   };
   const recMsg = (data: msginp) => {
     addMsg(data, false);
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCht(e.target.value);
+  };
+
+  const kd = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.code === "Enter" || e.code === "NumpadEnter") sendMsg();
   };
 
   useEffect(() => {
@@ -122,7 +130,12 @@ const Chat = () => {
               })}
           </div>
           <div className="typemsg">
-            <input type="text" ref={ref} />
+            <input
+              type="text"
+              value={cht}
+              onChange={handleChange}
+              onKeyDown={kd}
+            />
             <button onClick={sendMsg}>SEND</button>
           </div>
         </div>

@@ -45,7 +45,7 @@ export const useSocket = () => {
 
 const TwoDcontext = ({ children }: props) => {
   const socket: Socket = useMemo(() => {
-    return io("http://localhost:8000/");
+    return io("https://twod-api-zun3.onrender.com");
   }, []);
   const [user, setUser] = useState<User>(null);
   const [userpos, setUserpos] = useState<userpos>({ x: 50, y: 50 });

@@ -47,7 +47,9 @@ const onConnection = (socket, io) => {
   socket.on("chat-send", (data) => {
     io.to(data.sid).emit("chat-msg", { ...data, sid: socket.id });
   });
-  socket.on("avcng", changeAvatar);
+  socket.on("avcng", (data) => {
+    changeAvatar(data, io, socket.id);
+  });
   socket.on("connect-req", (data) => {
     Connreq(socket.id, data, io);
   });
@@ -62,6 +64,11 @@ const onConnection = (socket, io) => {
   });
   socket.on("iceCan", (data) => {
     io.to(data.sid).emit("rec-ice", data.ice);
+  });
+  socket.on("conclose", () => {
+    const osid = getCon(socket.id);
+    io.to(osid).emit("conreq-res", { status: "User Disconnected" });
+    removeCon(socket.id, osid);
   });
 };
 

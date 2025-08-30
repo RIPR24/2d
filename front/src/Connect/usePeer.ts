@@ -1,9 +1,14 @@
 import { Socket } from "socket.io-client";
+import getMedia from "./getMedia";
 
-export default function usePeer(
+export default async function usePeer(
   sid: string,
   socket: Socket | undefined,
-  setRmtstr: React.Dispatch<React.SetStateAction<MediaStream>>
+  setRmtstr: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
+  setMystr: React.Dispatch<React.SetStateAction<MediaStream | undefined>>,
+  call: string | undefined,
+  rmtstr: MediaStream | undefined,
+  mystr: MediaStream | undefined
 ) {
   try {
     const peer = new RTCPeerConnection({
@@ -12,14 +17,27 @@ export default function usePeer(
           urls: [
             "stun:stun1.l.google.com:19302",
             "stun:stun2.l.google.com:19302",
+            "stun:stun3.l.google.com:19302",
+            "stun:stun4.l.google.com:19302",
+            "stun:stun.l.google.com:5349",
+            "stun:stun1.l.google.com:3478",
             "stun:global.stun.twilio.com:3478",
           ],
         },
       ],
     });
+    if (!mystr) {
+      const str = await getMedia(call || "V");
+      if (str) {
+        str.getTracks().forEach((trk) => {
+          peer.addTrack(trk, str);
+        });
+      }
+      setMystr(str);
+    }
     //listener
-    peer.addEventListener("signalingstatechange", (e) => {
-      console.log(e, "new signal!!");
+    peer.addEventListener("signalingstatechange", () => {
+      //console.log(e, "new signal!!");
     });
     peer.addEventListener("icecandidate", (e) => {
       if (e.candidate) {
@@ -31,10 +49,11 @@ export default function usePeer(
     });
 
     peer.addEventListener("track", (e) => {
-      console.log("got stream", e.streams[0].getTracks());
-      setRmtstr(e.streams[0]);
+      if (!rmtstr) {
+        setRmtstr(e.streams[0]);
+      }
     });
-    peer.ondatachannel = (e) => {
+    peer.ondatachannel = () => {
       console.log("data chanel opend");
     };
     return { peer };

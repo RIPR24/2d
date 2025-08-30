@@ -12,6 +12,10 @@ const login = async (data, id, io) => {
     if (user.Password === "google") {
       io.emit("logerr", { status: "Loggedin with google" });
     } else {
+      if (user.Password === data.password) {
+        const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET, {
+          expiresIn: "2h",
+        });
       const Password = createHmac("sha256", process.env.KEY)
         .update(data.Password)
         .digest("hex");
@@ -38,7 +42,9 @@ const loginViaToken = async (data, id, io) => {
     if (!err) {
       const user = await userModel.findById(uid);
       if (user) {
-        const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
+        const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET, {
+          expiresIn: "2h",
+        });
         logEntry(id, user.Name, user.Avatar);
         io.to(id).emit("logres", {
           name: user.Name,
@@ -68,7 +74,9 @@ const glogin = async (data, id, io) => {
   const gres = await getCred(data.code);
   const user = await userModel.findOne({ Email: gres.email });
   if (user) {
-    const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
+    const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET, {
+      expiresIn: "2h",
+    });
     logEntry(id, user.Name, user.Avatar);
     io.to(id).emit("logres", {
       name: user.Name,
@@ -85,7 +93,9 @@ const glogin = async (data, id, io) => {
     });
 
     if (user._id) {
-      const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET);
+      const tok = jwt.sign({ _id: user._id }, process.env.ACCESS_SECRET, {
+        expiresIn: "2h",
+      });
 
       io.to(id).emit("logres", {
         name: user.Name,
@@ -99,14 +109,22 @@ const glogin = async (data, id, io) => {
   }
 };
 
-const changeAvatar = (data) => {
+const changeAvatar = (data, io, id) => {
   jwt.verify(data.token, process.env.ACCESS_SECRET, async (err, uid) => {
     if (!err) {
       const user = await userModel.findById(uid);
       if (user) {
         user.Avatar = +data.av;
         user.save();
+        io.to(id).emit("avchng", {
+          name: user.Name,
+          email: user.Email,
+          avatar: user.Avatar,
+          token: data.token,
+        });
       }
+    } else {
+      io.to(id).emit("unauth", {});
     }
   });
 };
